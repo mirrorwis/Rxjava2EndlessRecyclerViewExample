@@ -1,6 +1,4 @@
-rxjava2 endless recyclerview exmaple.
+Infinite scroll endless recyclerview example
 - rxjava2
 - rxbinding
 - rxandroid
-
-
