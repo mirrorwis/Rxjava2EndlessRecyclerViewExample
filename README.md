@@ -1,7 +1,9 @@
-Infinite scroll endless recyclerview example
-- rxjava2
+Android Infinite scroll endless recyclerview example
+- rxjava 2
 - rxbinding
 - rxandroid
+
+
 
 Observable for paging
 ```
@@ -46,3 +48,6 @@ RxRecyclerView.scrollEvents(mRecyclerView)
         .observeOn(AndroidSchedulers.mainThread());
 
 ```
+
+References
+-  https://github.com/lenguyenthanh/Rx-Endless-RecyclerView
