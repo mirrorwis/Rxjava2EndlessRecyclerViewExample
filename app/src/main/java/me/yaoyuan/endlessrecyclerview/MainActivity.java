@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
 
     private ItemService mItemService = new ItemService();
+
     private ItemAdapter mItemAdapter;
 
     private Disposable mDisposable;
@@ -94,27 +95,24 @@ public class MainActivity extends AppCompatActivity {
                 .filter(new Predicate<PagingScrollEvent>() {
                     @Override
                     public boolean test(@NonNull PagingScrollEvent pagingScrollEvent) throws Exception {
-                        return pagingScrollEvent.shouldLoadMore(20);
+                        return pagingScrollEvent.shouldLoadMore(6);
                     }
                 })
                 .map(new Function<PagingScrollEvent, PagingScrollEvent.Page>() {
                     @Override
                     public PagingScrollEvent.Page apply(@NonNull PagingScrollEvent pagingScrollEvent) throws Exception {
-                        return pagingScrollEvent.toPage(20);
+                        return pagingScrollEvent.toPage(6);
                     }
                 })
                 .distinct()
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<PagingScrollEvent.Page>() {
                     @Override
                     public void accept(@NonNull PagingScrollEvent.Page page) throws Exception {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mItemAdapter.setLoading(true);
-                            }
-                        });
+                        mItemAdapter.setLoading(true);
                     }
                 })
+                .observeOn(Schedulers.computation())
                 .flatMap(new Function<PagingScrollEvent.Page, Observable<List<Item>>>() {
                     @Override
                     public Observable<List<Item>> apply(@NonNull PagingScrollEvent.Page page) throws Exception {
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initItems() {
-        mItemService.getItems(0, 20)
+        mItemService.getItems(0, 6)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Item>>() {
